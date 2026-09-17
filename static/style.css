@@ -56,7 +56,7 @@ dialog {
 }
 
 
-dialog .modalContainer {
+.modalContainer {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -64,7 +64,7 @@ dialog .modalContainer {
     width: 95vw;
     height: 90vh;
 }
-dialog h2 {
+.modalContainer h2 {
     color: #1e3d1c;
     text-align: center;
     margin-top: 15px;
@@ -80,4 +80,37 @@ dialog h2 {
 .modalContainer .botoes {
     margin-top: 5px;
     padding: 20px 16px;
+}
+
+#modalResultado {
+    width: 70vw;
+}
+
+#modalResultado[open] {
+    animation: surgir 0.7s ease-out;
+}
+
+dialog .resultado {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 70vw;
+    height: 90vh;
+}
+
+#personagem {
+    max-width: 70%;
+}
+
+@keyframes surgir {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+        transform: translate(-50%, -50%);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+        transform: translate(-50%, -50%);
+    }
 }

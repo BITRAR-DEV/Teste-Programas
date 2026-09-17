@@ -17,12 +17,28 @@ picam2.configure(config)
 
 camera_ligada = False
 
+objeto_detectado = None
+confianca = 0.0
+
 def generate_frames():
     global camera_ligada
+    global objeto_detectado
+    global confianca
     while camera_ligada:
         frame = picam2.capture_array()
 
         results = model(frame, verbose=False)
+
+
+
+        for box in results[0].boxes:
+            id_classe = int(box.cls[0])
+            nome_classe = model.names[id_classe]
+            confianca = float(box.conf[0])
+
+            if confianca >= 0.7:
+                objeto_detectado = nome_classe
+
 
         frame = results[0].plot()
 
@@ -39,6 +55,9 @@ def generate_frames():
         yield (b"--frame\r\n"
                b"Content-Type: image/jpeg\r\n\r\n" + frame + b"\r\n")
 
+
+
+    
 @app.route("/")
 def homepage():
     return render_template("index.html")
@@ -64,6 +83,16 @@ def parar_camera():
         picam2.stop()
 
     return "ok"
+
+@app.route("/resultado")
+def mostrarResultado():
+    global objeto_detectado
+    global confianca
+
+    if confianca >= 0.7:
+        parar_camera()
+
+    return {"classe": objeto_detectado}
 
 @app.route("/foto")
 def camera():
